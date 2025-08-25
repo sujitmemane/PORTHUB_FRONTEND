@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, PlusIcon, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import React, { useState } from "react";
 
 type Category = {
@@ -58,12 +58,14 @@ const SideProfile: React.FC = () => {
   return (
     <div className="w-full border-white/10 text-white">
       <div className="flex justify-between mb-4">
-        {" "}
-        <h2 className="text-xl font-bold ">Skills</h2>{" "}
-        <Button variant="default" className="flex items-center gap-2">
-          {" "}
-          <Plus className="w-4 h-4" /> Add New Category{" "}
-        </Button>{" "}
+        <h2 className="text-xl font-bold text-white">Skills</h2>
+        <Button
+          variant="default"
+          className="flex items-center gap-1 text-sm px-2 py-1 bg-[#1A1A1A] border border-[#2A2A2A] hover:bg-[#2A2A2A] "
+          onClick={addCategory}
+        >
+          <Plus className="w-3 h-3" /> Add Category
+        </Button>
       </div>
 
       {categories.map((category, idx) => (
@@ -75,7 +77,7 @@ const SideProfile: React.FC = () => {
             </h3>
             <button
               onClick={() => deleteCategory(idx)}
-              className="text-red-500 hover:text-red-700"
+              className="text-[#FF7F7F]"
             >
               <X className="w-4 h-4" />
             </button>
@@ -86,12 +88,12 @@ const SideProfile: React.FC = () => {
             {category.skills.map((skill, i) => (
               <span
                 key={i}
-                className="bg-white text-black px-3 py-1 rounded-full text-sm font-medium shadow-sm flex items-center gap-2"
+                className="bg-[#1A1A1A] text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1"
               >
                 {skill}
                 <button
                   onClick={() => deleteSkill(idx, i)}
-                  className="text-red-500 hover:text-red-700"
+                  className="text-[#FF7F7F]"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -108,14 +110,16 @@ const SideProfile: React.FC = () => {
               onChange={(e) =>
                 setNewSkill({ ...newSkill, [idx]: e.target.value })
               }
-              className="w-full px-4 py-3 bg-[#111111] border border-[#2A2A2A] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFCC00] focus:border-transparent transition-all"
+              className="w-full px-4 py-2 bg-[#111111] border border-[#2A2A2A] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:border-transparent transition-all"
             />
-            <button
+
+            <Button
+              variant="default"
+              className="flex items-center gap-1 text-sm px-2 py-1 bg-[#1A1A1A] border border-[#2A2A2A] hover:bg-[#2A2A2A] "
               onClick={() => addSkill(idx)}
-              className="bg-gradient-to-r from-[#FFCC00] to-[#FFD700] text-black text-sm px-3 rounded hover:bg-orange-600"
             >
-              <PlusIcon />
-            </button>
+              <Plus className="w-3 h-3" />
+            </Button>
           </div>
         </div>
       ))}

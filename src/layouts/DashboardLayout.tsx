@@ -6,14 +6,16 @@ const DashboardLayout = ({ mainElement, sideElement }) => {
       <div className="max-w-7xl mx-auto flex text-white">
         {/* Left Sidebar */}
         <div className="w-64 xl:w-72 flex-shrink-0 sticky top-0 h-screen">
-          <div className="h-full border-r border-gray-800/30">
+          <div className="h-full border-r border-white/20">
             <Sidebar />
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 min-w-0 border-r  border-gray-800/30">
-          <div className="h-screen overflow-y-auto">{mainElement}</div>
+        <div className="flex-1 min-w-0 border-r border-white/20">
+          <div className="h-screen overflow-y-auto scrollable ">
+            {mainElement}
+          </div>
         </div>
 
         {/* Right Sidebar */}

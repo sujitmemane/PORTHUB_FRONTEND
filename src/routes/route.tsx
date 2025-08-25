@@ -28,6 +28,7 @@ import GetStarted from "@/pages/onboarding/GetStarted";
 import SecondStep from "@/pages/onboarding/SecondStep";
 import MainProfile from "@/pages/dashboard/profile/MainProfile";
 import SideProfile from "@/pages/dashboard/profile/SideProfile";
+import EnhanceAI from "@/components/common/EnhanceAI";
 
 export default function AppRoutes() {
   return (
@@ -64,6 +65,7 @@ export default function AppRoutes() {
 
           {/* <Route path="*" element={<Navigate to="/dashboard" replace />} /> */}
         </Routes>
+
         {/* </AppContextProvider> */}
       </BrowserRouter>
     </div>

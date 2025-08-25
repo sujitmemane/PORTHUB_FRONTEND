@@ -9,10 +9,14 @@ import {
   Mail,
   MoreHorizontal,
   Ribbon,
+  Settings,
+  Grid,
+  LayoutDashboard,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const sidebarItems = [
+  { icon: LayoutDashboard, label: "Dashboard", active: false },
   { icon: User, label: "Profile", active: true },
   { icon: Code, label: "Projects", active: false },
   { icon: Briefcase, label: "Experience", active: false },
@@ -49,16 +53,26 @@ const Sidebar = () => {
         ))}
       </nav>
       {/* Profile preview */}
-      <div className="flex items-center space-x-3 p-4 mt-auto hover:bg-[#FFCC00]/20 rounded-lg cursor-pointer transition-all">
-        <Avatar className="w-10 h-10">
-          <AvatarImage src="/api/placeholder/40/40" alt="Sujeeth" />
-          <AvatarFallback>S</AvatarFallback>
-        </Avatar>
-        <div className="flex-1">
-          <div className="font-bold text-white">Sujeeth Memane</div>
-          <div className="text-gray-200 text-sm">@Sam</div>
+      <div>
+        <div
+          className={`flex items-center bg-white hover:bg-white/90 space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-all
+
+            `}
+        >
+          <Settings className={`w-6 h-6 text-black `} />
+          <span className="text-sm text-black">Settings</span>
         </div>
-        <MoreHorizontal className="w-5 h-5 text-white" />
+
+        <div className="flex items-center space-x-3 p-4 mt-auto hover:bg-[#FFCC00]/20 rounded-lg cursor-pointer transition-all">
+          <Avatar className="w-10 h-10">
+            <AvatarImage src="/api/placeholder/40/40" alt="Sujeeth" />
+            <AvatarFallback>S</AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <div className="font-bold text-white">Sujeeth Memane</div>
+            <div className="text-gray-200 text-sm">@Sam</div>
+          </div>
+        </div>
       </div>
     </div>
   );

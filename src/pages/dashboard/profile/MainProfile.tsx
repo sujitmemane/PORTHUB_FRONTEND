@@ -8,6 +8,8 @@ import About from "@/components/profile/About";
 
 const MainProfile = () => {
   const [profile, setProfile] = useState({});
+  const [name, setName] = useState("");
+  const [bio, setBio] = useState("");
   const [bannerText, setBannerText] = useState("");
   const [bannerIndex, setBannerIndex] = useState(0);
   const [avatarIndex, setAvatarIndex] = useState<number>(0);
@@ -23,6 +25,8 @@ const MainProfile = () => {
         const data = profileRes.data.data;
         setProfile(data);
         setBannerText(data?.banner?.bgText || "");
+        setBio(data?.data?.data?.bio);
+        setName(data?.data?.data?.name);
       }
 
       // Optional: fetch dynamic avatars from API
@@ -96,8 +100,8 @@ const MainProfile = () => {
       </div> */}
 
       {/* Profile Section */}
-      <div className="w-full space-y-6">
-        <div className="bg-white/5 backdrop-blur-sm overflow-hidden border border-white/10">
+      <div className="w-full overflow-hidden space-y-6">
+        <div className="bg-[#1A1A1A]  overflow-hidden">
           {/* Banner */}
           <div className="relative w-full">
             <div
@@ -153,24 +157,90 @@ const MainProfile = () => {
             {/* Profile Info */}
             <div className=" pt-12 space-y-3">
               <div>
-                <h2 className="text-xl font-bold text-white">
+                <h2
+                  contentEditable
+                  suppressContentEditableWarning={true}
+                  onInput={(e) => {
+                    const text = e.currentTarget.textContent || "";
+                    const maxLength = 20;
+                    const truncated = text.slice(0, maxLength);
+                    setName(truncated);
+
+                    if (text.length > maxLength) {
+                      e.currentTarget.textContent = truncated;
+                      const range = document.createRange();
+                      const sel = window.getSelection();
+                      if (sel) {
+                        range.setStart(
+                          e.currentTarget.childNodes[0] || e.currentTarget,
+                          truncated.length
+                        );
+                        range.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                      }
+                    }
+                  }}
+                  className="
+    text-xl font-bold text-white
+    border-b border-transparent hover:border-gray-500 focus:border-yellow-500
+    outline-none cursor-text
+    break-words whitespace-normal
+    transition-all
+  "
+                  spellCheck={false}
+                >
                   {profile?.name || "Your Name"}
                 </h2>
+
                 <p className="text-gray-400">
                   @{profile?.username || "username"}
                 </p>
               </div>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                {profile?.bio || "Your bio will appear here..."}
+
+              <p
+                contentEditable
+                suppressContentEditableWarning={true}
+                onInput={(e) => {
+                  const text = e.currentTarget.textContent || "";
+                  const maxLength = 200;
+                  const truncated = text.slice(0, maxLength);
+                  setBio(truncated);
+
+                  if (text.length > maxLength) {
+                    e.currentTarget.textContent = truncated;
+                    const range = document.createRange();
+                    const sel = window.getSelection();
+                    if (sel) {
+                      range.setStart(
+                        e.currentTarget.childNodes[0] || e.currentTarget,
+                        truncated.length
+                      );
+                      range.collapse(true);
+                      sel.removeAllRanges();
+                      sel.addRange(range);
+                    }
+                  }
+                }}
+                className="
+    text-sm text-white
+    border-b border-transparent hover:border-gray-500 focus:border-[#2A2A2A]
+    outline-none cursor-text
+    break-words whitespace-normal
+    transition-all
+  "
+                spellCheck={false}
+              >
+                {profile?.bio || "bio"}
               </p>
             </div>
           </div>
         </div>
       </div>
+      <About />
 
       <UserLinks />
       <QuickInfo />
-      <About />
 
       {/* Tabs / Posts */}
     </div>

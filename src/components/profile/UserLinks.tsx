@@ -73,22 +73,23 @@ const UserLinks = () => {
   };
 
   return (
-    <div>
-      <div className="flex justify-end mb-4">
+    <div className="p-2 my-8">
+      <div className="flex justify-between  items-center mb-4 ">
+        <h1 className="text-lg font-bold">User Links</h1>
         <Button
           onClick={handleAdd}
           variant="default"
-          className="flex items-center gap-2"
+          className="flex items-center gap-1 text-sm px-2 py-1 bg-[#1A1A1A] border border-[#2A2A2A] hover:bg-[#2A2A2A] "
         >
           <Plus className="w-4 h-4" /> Add New Link
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 p-4  bg-[#1A1A1A] border border-gray-700 rounded-xl">
         {links.map((link, index) => (
           <div
             key={link.name}
-            className="flex items-center justify-between p-4 border border-gray-700 rounded-lg hover:bg-[#0A0A0A] transition"
+            className="flex items-center justify-between p-4 border border-[#2A2A2A]  rounded-lg hover:bg-[#0A0A0A] transition"
           >
             <div className="flex items-center space-x-4">
               <img
@@ -107,10 +108,10 @@ const UserLinks = () => {
                 size="icon"
                 onClick={() => handleEdit(index)}
               >
-                <Edit className="w-5 h-5 text-gray-400" />
+                <Edit className="w-5 h-5 text-white" />
               </Button>
               <a href={link.url} target="_blank" rel="noopener noreferrer">
-                <ArrowUpRight className="w-5 h-5 text-gray-400" />
+                <ArrowUpRight className="w-5 h-5 text-white" />
               </a>
             </div>
           </div>
