@@ -29,6 +29,7 @@ import SecondStep from "@/pages/onboarding/SecondStep";
 import MainProfile from "@/pages/dashboard/profile/MainProfile";
 import SideProfile from "@/pages/dashboard/profile/SideProfile";
 import EnhanceAI from "@/components/common/EnhanceAI";
+import MainContact from "@/pages/dashboard/contact/MainContact";
 
 export default function AppRoutes() {
   return (
@@ -53,10 +54,20 @@ export default function AppRoutes() {
 
           <Route path="/dashboard">
             <Route
-              index
+              path="profile"
               element={
                 <DashboardLayout
                   mainElement={<MainProfile />}
+                  sideElement={<SideProfile />}
+                />
+              }
+            />
+
+            <Route
+              path="contact"
+              element={
+                <DashboardLayout
+                  mainElement={<MainContact />}
                   sideElement={<SideProfile />}
                 />
               }

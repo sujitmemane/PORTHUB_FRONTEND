@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ApiClient from "@/lib/axios";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type Category = {
   _id: string;
@@ -15,16 +16,23 @@ const SideProfile: React.FC = () => {
   const [categoryInput, setCategoryInput] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [newSkill, setNewSkill] = useState<{ [key: string]: string }>({});
-  console.log(newSkill);
+
+  // Loading states
+  const [addCategoryLoading, setAddCategoryLoading] = useState(false);
+  const [deleteCategoryLoading, setDeleteCategoryLoading] = useState<
+    string | null
+  >(null);
+  const [addSkillLoading, setAddSkillLoading] = useState<string | null>(null);
+  const [deleteSkillLoading, setDeleteSkillLoading] = useState<string | null>(
+    null
+  );
 
   const fetchSkills = async () => {
     try {
       const res = await ApiClient.get("/skills");
-      if (res?.data?.success) {
-        setCategories(res.data.data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch skills:", error);
+      if (res?.data?.success) setCategories(res.data.data);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Failed to fetch skills");
     }
   };
 
@@ -32,39 +40,47 @@ const SideProfile: React.FC = () => {
     fetchSkills();
   }, []);
 
-  console.log(categories);
-
   const handleAddCategory = async () => {
-    if (!newCategory.trim()) return;
+    if (!newCategory.trim())
+      return toast.error("Category name cannot be empty");
+    setAddCategoryLoading(true);
     try {
       const res = await ApiClient.post("/skills/categories", {
         name: newCategory,
       });
       if (res?.data?.success) {
         fetchSkills();
-
+        toast.success(res?.data?.message || "Category added");
         setNewCategory("");
+        setCategoryInput(false);
       }
-    } catch (error) {
-      console.error("Error adding category:", error);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Error adding category");
+    } finally {
+      setAddCategoryLoading(false);
     }
   };
 
   const handleDeleteCategory = async (categoryId: string) => {
+    setDeleteCategoryLoading(categoryId);
     try {
       const res = await ApiClient.delete("/skills/categories", {
         data: { categoryId },
       });
       if (res?.data?.success) {
         fetchSkills();
+        toast.success(res?.data?.message || "Category deleted");
       }
-    } catch (error) {
-      console.error("Error deleting category:", error);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Error deleting category");
+    } finally {
+      setDeleteCategoryLoading(null);
     }
   };
 
   const handleAddSkill = async (categoryId: string, name: string) => {
-    if (!name.trim()) return;
+    if (!name.trim()) return toast.error("Skill name cannot be empty");
+    setAddSkillLoading(categoryId);
     try {
       const res = await ApiClient.post("/skills/categories/skills", {
         categoryId,
@@ -73,22 +89,29 @@ const SideProfile: React.FC = () => {
       if (res?.data?.success) {
         fetchSkills();
         setNewSkill((prev) => ({ ...prev, [categoryId]: "" }));
+        toast.success(res?.data?.message || "Skill added");
       }
-    } catch (error) {
-      console.error("Error adding skill:", error);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Error adding skill");
+    } finally {
+      setAddSkillLoading(null);
     }
   };
 
   const handleDeleteSkill = async (skillId: string) => {
+    setDeleteSkillLoading(skillId);
     try {
       const res = await ApiClient.delete("/skills/categories/skills", {
         data: { skillId },
       });
       if (res?.data?.success) {
         fetchSkills();
+        toast.success(res?.data?.message || "Skill deleted");
       }
-    } catch (error) {
-      console.error("Error deleting skill:", error);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Error deleting skill");
+    } finally {
+      setDeleteSkillLoading(null);
     }
   };
 
@@ -100,8 +123,14 @@ const SideProfile: React.FC = () => {
           variant="default"
           className="flex items-center gap-1 text-sm px-2 py-1 bg-[#1A1A1A] border border-[#2A2A2A] hover:bg-[#2A2A2A]"
           onClick={() => setCategoryInput(true)}
+          disabled={addCategoryLoading}
         >
-          <Plus className="w-3 h-3" /> Add Category
+          {addCategoryLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Plus className="w-3 h-3" />
+          )}{" "}
+          Add Category
         </Button>
       </div>
 
@@ -116,9 +145,14 @@ const SideProfile: React.FC = () => {
           />
           <Button
             onClick={handleAddCategory}
+            disabled={addCategoryLoading}
             className="flex items-center gap-1 text-sm px-2 py-1 bg-[#1A1A1A] border border-[#2A2A2A] hover:bg-[#2A2A2A]"
           >
-            <Plus className="w-3 h-3" />
+            {addCategoryLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Plus className="w-3 h-3" />
+            )}
           </Button>
           <Button
             onClick={() => setCategoryInput(false)}
@@ -131,18 +165,21 @@ const SideProfile: React.FC = () => {
 
       {categories.map((category) => (
         <div key={category._id} className="mb-6">
-          {/* Category header */}
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-semibold">{category?.name}</h3>
             <button
               onClick={() => handleDeleteCategory(category._id)}
+              disabled={deleteCategoryLoading === category._id}
               className="flex items-center gap-1 text-[#FF7F7F] text-sm px-2 py-1 bg-[#1A1A1A] border border-[#2A2A2A] hover:bg-[#2A2A2A]"
             >
-              <X className="w-4 h-4" />
+              {deleteCategoryLoading === category._id ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <X className="w-4 h-4" />
+              )}
             </button>
           </div>
 
-          {/* Skills list */}
           <div className="flex flex-wrap gap-2">
             {category.skills.map((skill) => (
               <span
@@ -152,15 +189,19 @@ const SideProfile: React.FC = () => {
                 {skill.name}
                 <button
                   onClick={() => handleDeleteSkill(skill._id)}
+                  disabled={deleteSkillLoading === skill._id}
                   className="text-[#FF7F7F]"
                 >
-                  <X className="w-3 h-3" />
+                  {deleteSkillLoading === skill._id ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <X className="w-3 h-3" />
+                  )}
                 </button>
               </span>
             ))}
           </div>
 
-          {/* Add skill input */}
           <div className="flex gap-2 mt-3">
             <Input
               type="text"
@@ -176,9 +217,14 @@ const SideProfile: React.FC = () => {
               onClick={() =>
                 handleAddSkill(category._id, newSkill[category._id])
               }
+              disabled={addSkillLoading === category._id}
               className="flex items-center gap-1 text-sm px-2 py-1 bg-[#1A1A1A] border border-[#2A2A2A] hover:bg-[#2A2A2A]"
             >
-              <Plus className="w-3 h-3" />
+              {addSkillLoading === category._id ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Plus className="w-3 h-3" />
+              )}
             </Button>
           </div>
         </div>
